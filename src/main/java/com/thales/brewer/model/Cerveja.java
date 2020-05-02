@@ -1,6 +1,7 @@
 package com.thales.brewer.model;
 
 import com.thales.brewer.validation.SKU;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -162,6 +163,10 @@ public class Cerveja {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getFotoOrMock(){
+        return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
     }
 
     public String getContentType() {

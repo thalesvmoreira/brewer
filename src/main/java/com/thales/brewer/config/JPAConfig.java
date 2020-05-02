@@ -3,6 +3,7 @@ package com.thales.brewer.config;
 import com.thales.brewer.model.Cerveja;
 import com.thales.brewer.repository.Cervejas;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
@@ -18,6 +19,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
+@ComponentScan(basePackageClasses = Cervejas.class)
 @EnableJpaRepositories(basePackageClasses = Cervejas.class, enableDefaultTransactions = false)
 @EnableTransactionManagement
 public class JPAConfig {
