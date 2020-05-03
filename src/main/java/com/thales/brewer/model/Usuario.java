@@ -1,6 +1,6 @@
 package com.thales.brewer.model;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.*;
 
 public class Usuario {
 

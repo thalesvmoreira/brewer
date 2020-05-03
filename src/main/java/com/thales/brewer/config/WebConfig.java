@@ -1,6 +1,8 @@
 package com.thales.brewer.config;
 
+import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.thales.brewer.controller.CervejasController;
+import com.thales.brewer.controller.converter.CidadeConverter;
 import com.thales.brewer.controller.converter.EstiloConverter;
 import com.thales.brewer.thymeleaf.BrewerDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
@@ -59,6 +61,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
         engine.addDialect(new LayoutDialect());
         engine.addDialect(new BrewerDialect());
+        engine.addDialect(new DataAttributeDialect());
 
         return engine;
     }
@@ -82,6 +85,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public FormattingConversionService mvcConversionService(){
         DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService();
         conversionService.addConverter(new EstiloConverter());
+        conversionService.addConverter(new CidadeConverter());
 
         NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
         conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);

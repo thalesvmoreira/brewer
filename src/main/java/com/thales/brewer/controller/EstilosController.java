@@ -1,25 +1,31 @@
 package com.thales.brewer.controller;
 
+import com.thales.brewer.controller.page.PageWrapper;
 import com.thales.brewer.model.Estilo;
+import com.thales.brewer.repository.Estilos;
+import com.thales.brewer.repository.filter.EstiloFilter;
 import com.thales.brewer.service.CadastroEstiloService;
 import com.thales.brewer.service.exception.NomeEstiloJaCadastradoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/estilos")
 public class EstilosController {
+
+    @Autowired
+    private Estilos estilos;
 
     @Autowired
     private CadastroEstiloService cadastroEstiloService;
@@ -57,6 +63,18 @@ public class EstilosController {
         cadastroEstiloService.salvar(estilo);
 
         return ResponseEntity.ok(estilo);
+    }
+
+    @GetMapping
+    public ModelAndView pesquisar(EstiloFilter estiloFilter, BindingResult result,
+                                  @PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest){
+        ModelAndView mv = new ModelAndView("estilo/PesquisaEstilos");
+
+        PageWrapper<Estilo> paginaWrapper = new PageWrapper<>(estilos.filtrar(estiloFilter, pageable),
+                httpServletRequest);
+        mv.addObject("pagina", paginaWrapper);
+
+        return mv;
     }
 
 }
