@@ -56,6 +56,10 @@
 
         <!-- Thymeleaf extras data attribute -->
         <thymeleaf-extras-data-attribute.version>2.0.1</thymeleaf-extras-data-attribute.version>
+
+        <!-- Apache Bean Utils -->
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+
     </properties>
 
     <build>
@@ -224,6 +228,15 @@
             <version>${thymeleaf-extras-data-attribute.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Apache Bean Utils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

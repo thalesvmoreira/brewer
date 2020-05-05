@@ -3,16 +3,23 @@ package com.thales.brewer.config;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.thales.brewer.controller.CervejasController;
 import com.thales.brewer.controller.converter.CidadeConverter;
+import com.thales.brewer.controller.converter.EstadoConverter;
 import com.thales.brewer.controller.converter.EstiloConverter;
 import com.thales.brewer.thymeleaf.BrewerDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.number.NumberStyleFormatter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
@@ -30,12 +37,14 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Configuration
 @ComponentScan(basePackageClasses = {CervejasController.class})
 @EnableWebMvc
 @EnableSpringDataWebSupport
+@EnableCaching
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -86,6 +95,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService();
         conversionService.addConverter(new EstiloConverter());
         conversionService.addConverter(new CidadeConverter());
+        conversionService.addConverter(new EstadoConverter());
 
         NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00");
         conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);
@@ -93,11 +103,30 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
         conversionService.addFormatterForFieldType(Integer.class, integerFormatter);
 
+        // API de Datas a partir do Java 8
+        DateTimeFormatterRegistrar dateTimeFormatter = new DateTimeFormatterRegistrar();
+        dateTimeFormatter.setDateFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        dateTimeFormatter.registerFormatters(conversionService);
+
         return conversionService;
     }
 
     @Bean
     public LocaleResolver localeResolver(){
         return new FixedLocaleResolver(new Locale("pt", "BR"));
+    }
+
+    @Bean
+    public CacheManager cacheManager(){
+        return new ConcurrentMapCacheManager();
+    }
+
+    @Bean
+    public MessageSource messageSource(){
+        ReloadableResourceBundleMessageSource bundle = new ReloadableResourceBundleMessageSource();
+        bundle.setBasename("classpath:/messages");
+        bundle.setDefaultEncoding("UTF-8");
+
+        return bundle;
     }
 }

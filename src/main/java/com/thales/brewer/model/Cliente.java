@@ -1,5 +1,12 @@
 package com.thales.brewer.model;
 
+import com.thales.brewer.model.validation.ClienteGroupSequenceProvider;
+import com.thales.brewer.model.validation.group.CnpjGroup;
+import com.thales.brewer.model.validation.group.CpfGroup;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
+import org.hibernate.validator.group.GroupSequenceProvider;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "cliente")
+@GroupSequenceProvider(ClienteGroupSequenceProvider.class)
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,7 +33,9 @@ public class Cliente implements Serializable {
     @Column(name = "tipo_pessoa")
     private TipoPessoa tipoPessoa;
 
-    @NotBlank(message = "CPF/CNPJ é obrigatório.")
+    @NotBlank(message = "CPF/CNPJ é obrigatório")
+    @CPF(groups = CpfGroup.class)
+    @CNPJ(groups = CnpjGroup.class)
     @Column(name = "cpf_cnpj")
     private String cpfOuCnpj;
 
@@ -36,6 +46,16 @@ public class Cliente implements Serializable {
 
     @Embedded
     private Endereco endereco;
+
+    @PrePersist @PreUpdate
+    private void preInsertPreUpdate(){
+        this.cpfOuCnpj = TipoPessoa.removerFormatacao(this.cpfOuCnpj);
+    }
+
+    @PostLoad
+    private void postLoad(){
+        this.cpfOuCnpj = this.tipoPessoa.formatar(this.cpfOuCnpj);
+    }
 
     public Long getId() {
         return id;
@@ -91,6 +111,10 @@ public class Cliente implements Serializable {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public String getCpfOuCpnjSemFormatacao(){
+        return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
     }
 
     @Override
