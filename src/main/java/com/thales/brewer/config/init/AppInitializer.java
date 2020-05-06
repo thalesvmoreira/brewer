@@ -1,6 +1,7 @@
 package com.thales.brewer.config.init;
 
 import com.thales.brewer.config.JPAConfig;
+import com.thales.brewer.config.SecurityConfig;
 import com.thales.brewer.config.ServiceConfig;
 import com.thales.brewer.config.WebConfig;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -13,7 +14,7 @@ import javax.servlet.ServletRegistration;
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer{
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[] {JPAConfig.class, ServiceConfig.class};
+        return new Class<?>[] {JPAConfig.class, ServiceConfig.class, SecurityConfig.class};
     }
 
     @Override
