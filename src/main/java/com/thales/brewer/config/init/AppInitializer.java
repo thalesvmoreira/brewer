@@ -4,7 +4,6 @@ import com.thales.brewer.config.JPAConfig;
 import com.thales.brewer.config.SecurityConfig;
 import com.thales.brewer.config.ServiceConfig;
 import com.thales.brewer.config.WebConfig;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
@@ -29,11 +28,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Filter[] getServletFilters() {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-
-        return new Filter[] {characterEncodingFilter};
+        return new Filter[] {};
     }
 
     @Override

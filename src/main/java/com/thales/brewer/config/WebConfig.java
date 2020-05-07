@@ -31,6 +31,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -72,6 +73,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         engine.addDialect(new LayoutDialect());
         engine.addDialect(new BrewerDialect());
         engine.addDialect(new DataAttributeDialect());
+        engine.addDialect(new SpringSecurityDialect());
 
         return engine;
     }
@@ -89,6 +91,10 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+    }
+
+    public WebConfig() {
+        super();
     }
 
     @Bean
