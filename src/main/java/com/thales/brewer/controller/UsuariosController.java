@@ -6,16 +6,16 @@ import com.thales.brewer.repository.Grupos;
 import com.thales.brewer.repository.Usuarios;
 import com.thales.brewer.repository.filter.UsuarioFilter;
 import com.thales.brewer.service.CadastroUsuarioService;
+import com.thales.brewer.service.StatusUsuario;
 import com.thales.brewer.service.exception.EmailUsuarioJaCadastradoException;
 import com.thales.brewer.service.exception.SenhaObrigatoriaUsuarioException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -66,7 +66,9 @@ public class UsuariosController {
     @GetMapping
     public ModelAndView pesquisar(UsuarioFilter usuarioFilter, BindingResult result,
                                   @PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest){
-        ModelAndView mv = new ModelAndView("usuario/PesquisaUsuarios");
+        ModelAndView mv = new ModelAndView("/usuario/PesquisaUsuarios");
+        mv.addObject("usuarios", usuarios.filtrar(usuarioFilter, pageable));
+        mv.addObject("grupos", grupos.findAll());
 
         PageWrapper<Usuario> paginaWrapper = new PageWrapper<>(usuarios.filtrar(usuarioFilter, pageable),
                 httpServletRequest);
@@ -74,4 +76,11 @@ public class UsuariosController {
 
         return mv;
     }
+
+    @PutMapping("/status")
+    @ResponseStatus(HttpStatus.OK)
+    public void atualizarStatus(@RequestParam("codigos[]") Long[] codigos, @RequestParam("status") StatusUsuario statusUsuario){
+        cadastroUsuarioService.alterarStatus(codigos, statusUsuario);
+    }
+    
 }

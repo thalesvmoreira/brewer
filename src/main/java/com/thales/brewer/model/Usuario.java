@@ -1,6 +1,7 @@
 package com.thales.brewer.model;
 
 import com.thales.brewer.validation.AtributoConfirmacao;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,6 +16,7 @@ import java.util.Objects;
         , message = "Confirmação da senha não confere")
 @Entity
 @Table(name = "usuario")
+@DynamicUpdate
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,6 +47,11 @@ public class Usuario implements Serializable {
 
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
+
+    @PreUpdate
+    private void preUpdate(){
+        this.confirmacaoSenha = senha;
+    }
 
     public Long getId() {
         return id;
