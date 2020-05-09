@@ -1,5 +1,6 @@
 package com.thales.brewer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thales.brewer.model.validation.ClienteGroupSequenceProvider;
 import com.thales.brewer.model.validation.group.CnpjGroup;
 import com.thales.brewer.model.validation.group.CpfGroup;
@@ -44,6 +45,7 @@ public class Cliente implements Serializable {
     @Email(message= "E-mail inválido")
     private String email;
 
+    @JsonIgnore
     @Embedded
     private Endereco endereco;
 

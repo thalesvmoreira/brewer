@@ -1,5 +1,6 @@
 package com.thales.brewer.repository.helper.cerveja;
 
+import com.thales.brewer.dto.CervejaDTO;
 import com.thales.brewer.model.Cerveja;
 import com.thales.brewer.repository.filter.CervejaFilter;
 import com.thales.brewer.repository.paginacao.PaginacaoUtil;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 public class CervejasImpl implements CervejasQueries{
 
@@ -83,4 +85,14 @@ public class CervejasImpl implements CervejasQueries{
         return filtro.getEstilo() != null && filtro.getEstilo().getId() != null;
     }
 
+    @Override
+    public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
+        String jpql = "select new com.thales.brewer.dto.CervejaDTO(id, sku, nome, origem, valor, foto) " +
+                "from Cerveja where lower(sku) like lower(:skuOuNome) or lower(nome) like lower(:skuOuNome)";
+
+        List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
+                .setParameter("skuOuNome", skuOuNome + "%").getResultList();
+
+        return cervejasFiltradas;
+    }
 }
