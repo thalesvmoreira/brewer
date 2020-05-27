@@ -165,16 +165,20 @@ public class Cerveja {
         this.foto = foto;
     }
 
-    public String getFotoOrMock(){
-        return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
-    }
-
     public String getContentType() {
         return contentType;
     }
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getFotoOrMock(){
+        return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
+    }
+
+    public boolean temFoto(){
+        return !StringUtils.isEmpty(this.foto);
     }
 
     @Override

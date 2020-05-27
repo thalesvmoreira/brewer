@@ -1,9 +1,6 @@
 package com.thales.brewer.config.init;
 
-import com.thales.brewer.config.JPAConfig;
-import com.thales.brewer.config.SecurityConfig;
-import com.thales.brewer.config.ServiceConfig;
-import com.thales.brewer.config.WebConfig;
+import com.thales.brewer.config.*;
 import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -19,7 +16,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] {WebConfig.class};
+        return new Class<?>[] {WebConfig.class, MailConfig.class};
     }
 
     @Override
