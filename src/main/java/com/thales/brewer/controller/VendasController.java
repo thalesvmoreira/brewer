@@ -3,10 +3,7 @@ package com.thales.brewer.controller;
 import com.thales.brewer.controller.page.PageWrapper;
 import com.thales.brewer.controller.validator.VendaValidator;
 import com.thales.brewer.mail.Mailer;
-import com.thales.brewer.model.Cerveja;
-import com.thales.brewer.model.StatusVenda;
-import com.thales.brewer.model.TipoPessoa;
-import com.thales.brewer.model.Venda;
+import com.thales.brewer.model.*;
 import com.thales.brewer.repository.Cervejas;
 import com.thales.brewer.repository.Vendas;
 import com.thales.brewer.repository.filter.VendaFilter;
@@ -16,6 +13,7 @@ import com.thales.brewer.session.TabelasItensSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -59,9 +57,7 @@ public class VendasController {
     public ModelAndView nova(Venda venda){
         ModelAndView mv = new ModelAndView("venda/CadastroVenda");
 
-        if(StringUtils.isEmpty(venda.getUuid())) {
-            venda.setUuid(UUID.randomUUID().toString());
-        }
+        setUid(venda);
 
         mv.addObject("itens", venda.getItens());
         mv.addObject("valorFrete", venda.getValorFrete());
@@ -144,7 +140,7 @@ public class VendasController {
 
     @GetMapping
     public ModelAndView pesquisar(VendaFilter vendaFilter,
-                                  @PageableDefault(size = 3) Pageable pageable, HttpServletRequest httpServletRequest) {
+                                  @PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
         ModelAndView mv = new ModelAndView("/venda/PesquisaVendas");
         mv.addObject("todosStatus", StatusVenda.values());
         mv.addObject("tiposPessoa", TipoPessoa.values());
@@ -153,6 +149,35 @@ public class VendasController {
                 , httpServletRequest);
         mv.addObject("pagina", paginaWrapper);
         return mv;
+    }
+
+    @GetMapping("/{id}")
+    public ModelAndView editar(@PathVariable Long id){
+        Venda venda = vendas.buscarComItens(id);
+
+        setUid(venda);
+        for(ItemVenda item : venda.getItens()){
+            tabelaItens.adicionarItem(venda.getUuid(), item.getCerveja(), item.getQuantidade());
+        }
+
+        ModelAndView mv = nova(venda);
+        mv.addObject(venda);
+
+        return mv;
+    }
+
+    @PostMapping(value = "/nova", params = "cancelar")
+    public ModelAndView cancelar(Venda venda, BindingResult result, RedirectAttributes attributes,
+                                 @AuthenticationPrincipal UsuarioSistema usuarioSistema){
+        try{
+            cadastroVendaService.cancelar(venda);
+        } catch (AccessDeniedException e){
+            return new ModelAndView("/403");
+        }
+
+        attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso");
+
+        return new ModelAndView("redirect:/vendas/" + venda.getId());
     }
 
     private ModelAndView mvTabelaItensVenda(String uuid) {
@@ -168,5 +193,11 @@ public class VendasController {
         venda.calcularValorTotal();
 
         vendaValidator.validate(venda, result);
+    }
+
+    private void setUid(Venda venda) {
+        if(StringUtils.isEmpty(venda.getUuid())) {
+            venda.setUuid(UUID.randomUUID().toString());
+        }
     }
 }

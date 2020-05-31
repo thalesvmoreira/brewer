@@ -11,7 +11,7 @@ public class CervejaListener {
     @Autowired
     private FotoStorage fotoStorage;
 
-    @EventListener(condition = "#evento.foto")
+    @EventListener(condition = "#evento.foto and #evento.novaFoto")
     public void cervejaSalva(CervejaSalvaEvent evento){
         fotoStorage.salvar(evento.getCerveja().getFoto());
     }

@@ -16,4 +16,5 @@ public interface UsuariosQueries {
 
     public List<String> permissoes(Usuario usuario);
 
+    public Usuario buscarComGrupos(Long id);
 }
