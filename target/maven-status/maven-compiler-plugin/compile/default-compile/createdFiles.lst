@@ -22,13 +22,11 @@ com/thales/brewer/service/exception/EmailUsuarioJaCadastradoException.class
 com/thales/brewer/repository/helper/cidade/CidadesQueries.class
 com/thales/brewer/config/init/AppInitializer.class
 com/thales/brewer/model/Cidade.class
-com/thales/brewer/service/event/cerveja/CervejaListener.class
 com/thales/brewer/repository/Cervejas.class
 com/thales/brewer/config/format/BigDecimalFormatter.class
 com/thales/brewer/model/UsuarioGrupo.class
 com/thales/brewer/model/validation/group/CnpjGroup.class
 com/thales/brewer/model/Estilo.class
-com/thales/brewer/service/event/cerveja/CervejaSalvaEvent.class
 com/thales/brewer/model/Usuario.class
 com/thales/brewer/service/StatusUsuario$2.class
 com/thales/brewer/service/exception/NomeCidadeJaCadastradaException.class
@@ -39,6 +37,7 @@ com/thales/brewer/service/CadastroUsuarioService.class
 com/thales/brewer/service/CadastroCervejaService.class
 com/thales/brewer/validation/AtributoConfirmacao.class
 com/thales/brewer/model/Endereco.class
+com/thales/brewer/storage/s3/FotoStorageS3.class
 com/thales/brewer/controller/ClientesController.class
 com/thales/brewer/service/event/venda/VendaEvent.class
 com/thales/brewer/validation/SKU.class
@@ -82,6 +81,7 @@ com/thales/brewer/session/TabelaItensVenda.class
 com/thales/brewer/model/Cliente.class
 com/thales/brewer/security/AppUserDetailsService.class
 com/thales/brewer/model/TipoPessoa$1.class
+com/thales/brewer/config/S3Config.class
 com/thales/brewer/thymeleaf/processor/ClassForErrorAttributeTagProcessor.class
 com/thales/brewer/model/StatusVenda.class
 com/thales/brewer/storage/FotoStorageRunnable.class
@@ -97,6 +97,7 @@ com/thales/brewer/controller/CervejasController.class
 com/thales/brewer/thymeleaf/processor/MenuAttributeTagProcessor.class
 com/thales/brewer/config/JPAConfig.class
 com/thales/brewer/repository/filter/UsuarioFilter.class
+com/thales/brewer/repository/listener/CervejaEntityListener.class
 com/thales/brewer/repository/filter/CidadeFilter.class
 com/thales/brewer/service/CadastroEstiloService.class
 com/thales/brewer/service/event/venda/VendaListener.class
