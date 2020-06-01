@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Pattern(regexp = "([a-zA-Z]{2}\\d{4})?")
 public @interface SKU {
     @OverridesAttribute(constraint = Pattern.class, name = "message")
-    String message() default "SKU deve seguir o padrão de XX9999";
+    String message() default "{com.thales.constraints.SKU.message}";
 
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

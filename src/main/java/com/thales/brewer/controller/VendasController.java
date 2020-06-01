@@ -2,6 +2,7 @@ package com.thales.brewer.controller;
 
 import com.thales.brewer.controller.page.PageWrapper;
 import com.thales.brewer.controller.validator.VendaValidator;
+import com.thales.brewer.dto.VendaMes;
 import com.thales.brewer.mail.Mailer;
 import com.thales.brewer.model.*;
 import com.thales.brewer.repository.Cervejas;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -178,6 +180,11 @@ public class VendasController {
         attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso");
 
         return new ModelAndView("redirect:/vendas/" + venda.getId());
+    }
+
+    @GetMapping("/totalPorMes")
+    public @ResponseBody List<VendaMes> listarTotalVendaPorMes(){
+        return vendas.totalPorMes();
     }
 
     private ModelAndView mvTabelaItensVenda(String uuid) {

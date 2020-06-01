@@ -6,6 +6,7 @@ Brewer.UploadFoto = (function(){
         this.inputNomeFoto = $('input[name=foto]');
         this.inputContentType = $('input[name=contentType]');
         this.novaFoto = $('input[name=novaFoto]');
+        this.inputUrlFoto = $('input[name=urlFoto]');
 
         this.htmlFotoCervejaTemplate = $('#foto-cerveja').html();
 
@@ -14,6 +15,7 @@ Brewer.UploadFoto = (function(){
         this.containerFotoCerveja = $('.js-container-foto-cerveja');
 
         this.uploadDrop = $('#upload-drop');
+        this.imgLoading = $('.js-img-loading');
     }
 
     UploadFoto.prototype.iniciar = function(){
@@ -23,19 +25,29 @@ Brewer.UploadFoto = (function(){
             allow: '*.(jpg|jpeg|png)',
             action: this.containerFotoCerveja.data('url-fotos'),
             complete: onUploadCompleto.bind(this),
-            beforeSend: addCsrfToken
+            beforeSend: addCsrfToken,
+            loadstart: onLoadStart.bind(this)
         }
 
         UIkit.uploadSelect($('#upload-select'), settings);
         UIkit.uploadDrop(this.uploadDrop, settings);
 
         if(this.inputNomeFoto.val()){
-            renderizarFoto.call(this, { nome: this.inputNomeFoto.val(), contentType: this.inputContentType.val() });
+            renderizarFoto.call(this, {
+                nome: this.inputNomeFoto.val(),
+                contentType: this.inputContentType.val(),
+                url: this.inputUrlFoto.val()});
         }
+    }
+
+    function onLoadStart(){
+        this.imgLoading.removeClass('hidden');
     }
 
     function onUploadCompleto(resposta){
         this.novaFoto.val('true');
+        this.inputUrlFoto.val(resposta.url);
+        this.imgLoading.addClass('hidden');
         renderizarFoto.call(this, resposta);
     }
 
@@ -45,14 +57,7 @@ Brewer.UploadFoto = (function(){
 
         this.uploadDrop.addClass('hidden');
 
-        var foto = '';
-        if(this.novaFoto.val() == 'true'){
-            foto = 'temp/';
-        }
-
-        foto += resposta.nome;
-
-        var htmlFotoCerveja = this.template({foto: foto});
+        var htmlFotoCerveja = this.template({url: resposta.url});
         this.containerFotoCerveja.append(htmlFotoCerveja);
 
         $('.js-remove-foto').on('click', onRemoverFoto.bind(this));

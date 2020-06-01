@@ -1,5 +1,6 @@
 package com.thales.brewer.model;
 
+import com.thales.brewer.repository.listener.CervejaEntityListener;
 import com.thales.brewer.validation.SKU;
 import org.springframework.util.StringUtils;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@EntityListeners(CervejaEntityListener.class)
 @Entity
 @Table(name="cerveja")
 public class Cerveja {
@@ -17,10 +19,10 @@ public class Cerveja {
     private Long id;
 
     @SKU
-    @NotBlank(message = "SKU é obrigatório.")
+    @NotBlank
     private String sku;
 
-    @NotBlank(message="Nome é obrigatório")
+    @NotBlank
     private String nome;
 
     @NotBlank(message = "A descrição é obrigatória")
@@ -66,6 +68,12 @@ public class Cerveja {
 
     @Transient
     private boolean novaFoto;
+
+    @Transient
+    private String urlFoto;
+
+    @Transient
+    private String urlThumbnailFoto;
 
     @PrePersist @PreUpdate
     private void prePersistUpdate(){
@@ -186,6 +194,22 @@ public class Cerveja {
 
     public void setNovaFoto(boolean novaFoto) {
         this.novaFoto = novaFoto;
+    }
+
+    public String getUrlFoto() {
+        return urlFoto;
+    }
+
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
+    }
+
+    public String getUrlThumbnailFoto() {
+        return urlThumbnailFoto;
+    }
+
+    public void setUrlThumbnailFoto(String urlThumbnailFoto) {
+        this.urlThumbnailFoto = urlThumbnailFoto;
     }
 
     public boolean temFoto(){
