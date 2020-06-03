@@ -1,31 +1,20 @@
 package com.thales.brewer.config.format;
 
-import org.springframework.format.Formatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
-public class BigDecimalFormatter implements Formatter<BigDecimal> {
+@Component
+public class BigDecimalFormatter extends NumberFormatter<BigDecimal> {
 
-    private DecimalFormat decimalFormat;
-
-    public BigDecimalFormatter(String pattern){
-        NumberFormat format = NumberFormat.getInstance(new Locale("pt", "BR"));
-        decimalFormat = (DecimalFormat) format;
-        decimalFormat.setParseBigDecimal(true);
-        decimalFormat.applyPattern(pattern);
-    }
+    @Autowired
+    private Environment env;
 
     @Override
-    public BigDecimal parse(String text, Locale locale) throws ParseException {
-        return (BigDecimal) decimalFormat.parse(text);
-    }
-
-    @Override
-    public String print(BigDecimal object, Locale locale) {
-        return decimalFormat.format(object);
+    public String pattern(Locale locale) {
+        return env.getProperty("bigdecimal.format", "#,##0.00");
     }
 }

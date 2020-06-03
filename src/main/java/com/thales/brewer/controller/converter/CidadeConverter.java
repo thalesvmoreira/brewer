@@ -2,8 +2,10 @@ package com.thales.brewer.controller.converter;
 
 import com.thales.brewer.model.Cidade;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+@Component
 public class CidadeConverter implements Converter<String, Cidade> {
 
     @Override

@@ -1,6 +1,7 @@
 package com.thales.brewer.thymeleaf;
 
 import com.thales.brewer.thymeleaf.processor.*;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
 import org.thymeleaf.standard.StandardDialect;
@@ -8,6 +9,7 @@ import org.thymeleaf.standard.StandardDialect;
 import java.util.HashSet;
 import java.util.Set;
 
+@Component
 public class BrewerDialect extends AbstractProcessorDialect {
 
     public BrewerDialect() {
